@@ -1,0 +1,17 @@
+.footer {
+  position: fixed;
+  background-color: rgb(25, 118, 210);
+  bottom: 0;
+  padding: 5px;
+  color: #fff;
+  font-size: 13px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  a {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: none;
+  }
+}

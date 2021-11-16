@@ -1,0 +1,25 @@
+$tooltip-color: rgba(30, 30, 30, 0.9);
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+
+  &:hover .tooltiptext {
+    visibility: visible;
+  }
+
+  .tooltiptext {
+    visibility: hidden;
+    background-color: $tooltip-color;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    left: 50%;
+    margin-left: -70%;
+    font-size: 15px;
+  }
+}

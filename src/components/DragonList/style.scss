@@ -1,0 +1,10 @@
+.dragons-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+
+  & > div {
+    flex: 1;
+    margin: 5px;
+  }
+}
