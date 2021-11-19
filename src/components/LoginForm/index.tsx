@@ -73,6 +73,11 @@ export default function LoginForm() {
           </Button>
         </form>
       </div>
+      <code className="info-login">
+        Usuário: admin
+        <br />
+        Senha: admin
+      </code>
     </div>
   );
 }
