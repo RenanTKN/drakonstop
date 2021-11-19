@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useFormik } from "formik";
 import { useLocation, useNavigate } from "react-router";
+import * as Yup from "yup";
 
 import { useAuth } from "../../auth";
 import Button from "../Button";
@@ -7,46 +9,68 @@ import Button from "../Button";
 import "./style.scss";
 
 export default function LoginForm() {
-  const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("admin");
-
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuth();
 
   const from = location.state?.from?.pathname || "/";
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .max(15, "Deve ter no máximo 15 caracteres")
+        .required("Campo obrigatório"),
+      password: Yup.string()
+        .max(15, "Deve ter no máximo 15 caracteres")
+        .required("Campo obrigatório"),
+    }),
+    onSubmit: ({ username, password }) => {
+      setIsLoading(true);
+      auth.signin({ username, password }, () => {
+        navigate(from, { replace: true });
+      });
+    },
+  });
 
-    auth.signin({ username, password }, () => {
-      navigate(from, { replace: true });
-    });
-  };
   return (
     <div className="login-container">
       <div className="login-card">
-        <form className="form" onSubmit={handleSubmit}>
+        <form className="form" onSubmit={formik.handleSubmit}>
           <label>
-            Username:{" "}
+            Usuário:{" "}
             <input
               name="username"
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               autoFocus
             />
+            {formik.touched.username && formik.errors.username && (
+              <div className="form-error">{formik.errors.username}</div>
+            )}
           </label>{" "}
           <label>
-            Password:{" "}
+            Senha:{" "}
             <input
               name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
+            {formik.touched.password && formik.errors.password && (
+              <div className="form-error">{formik.errors.password}</div>
+            )}
           </label>{" "}
-          <Button type="submit">Login</Button>
+          <Button type="submit" disabled={isLoading}>
+            Login
+          </Button>
         </form>
       </div>
     </div>

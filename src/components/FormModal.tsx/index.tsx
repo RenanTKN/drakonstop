@@ -1,4 +1,6 @@
 import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import { Add, Edit } from "../../icons";
 import Button from "../Button";
@@ -23,44 +25,56 @@ export default function FormModal({
   onClose,
   onComplete,
 }: EditModalProps) {
-  const [name, setName] = React.useState(dragon?.name! ?? "");
-  const [type, setType] = React.useState(dragon?.type! ?? "");
   const [isCompleted, setIsCompleted] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      name: dragon?.name ?? "",
+      type: dragon?.type ?? "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Campo obrigatório"),
+      type: Yup.string().required("Campo obrigatório"),
+    }),
+    onSubmit: ({ name, type }) => {
+      setIsLoading(true);
+      const onSuccess = () => {
+        onComplete?.();
+        setIsCompleted(true);
+        setTimeout(() => {
+          onClose();
+          setIsCompleted(false);
+          formik.setFieldValue("name", "");
+          formik.setFieldValue("type", "");
+          setIsLoading(false);
+        }, 750);
+      };
+
+      isEdit
+        ? Dragon.editDragon({ id, name, type }).then((res) => {
+            if (res.status === 200) {
+              onSuccess();
+            }
+          })
+        : Dragon.addDragon({ type, name }).then((res) => {
+            if (res.status === 201) {
+              onSuccess();
+            }
+          });
+    },
+  });
 
   React.useEffect(() => {
-    setName(dragon?.name ?? "");
-    setType(dragon?.type ?? "");
-  }, [dragon]);
+    formik.setFieldValue("name", dragon?.name ?? "");
+    formik.setFieldValue("type", dragon?.type ?? "");
+    formik.setFieldTouched("name", false);
+    formik.setFieldTouched("type", false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dragon, display]);
 
   const id = dragon?.id!;
   const isEdit = !!id;
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const onSuccess = () => {
-      onComplete?.();
-      setIsCompleted(true);
-      setTimeout(() => {
-        onClose();
-        setIsCompleted(false);
-        setName("");
-        setType("");
-      }, 1000);
-    };
-
-    isEdit
-      ? Dragon.editDragon({ id, name, type }).then((res) => {
-          if (res.status === 200) {
-            onSuccess();
-          }
-        })
-      : Dragon.addDragon({ type, name }).then((res) => {
-          if (res.status === 201) {
-            onSuccess();
-          }
-        });
-  };
 
   return (
     <>
@@ -84,16 +98,20 @@ export default function FormModal({
         {isCompleted ? (
           <Title>✅ Sucesso</Title>
         ) : (
-          <form onSubmit={handleSubmit} className="form">
+          <form onSubmit={formik.handleSubmit} className="form">
             <label>
               Nome:
               <input
                 type="text"
                 name="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 autoFocus
               />
+              {formik.touched.name && formik.errors.name && (
+                <div className="form-error">{formik.errors.name}</div>
+              )}
             </label>
 
             <label>
@@ -101,11 +119,17 @@ export default function FormModal({
               <input
                 type="text"
                 name="type"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
+                value={formik.values.type}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
+              {formik.touched.type && formik.errors.type && (
+                <div className="form-error">{formik.errors.type}</div>
+              )}
             </label>
-            <Button type="submit">Salvar</Button>
+            <Button type="submit" disabled={isLoading}>
+              Salvar
+            </Button>
           </form>
         )}
       </Modal>

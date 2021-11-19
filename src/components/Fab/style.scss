@@ -35,3 +35,11 @@ $fab-size: 35px;
     background-color: #ac2a37;
   }
 }
+
+.yellow {
+  background-color: #daa300;
+  color: #fff;
+  &:hover {
+    background-color: #be8f00;
+  }
+}

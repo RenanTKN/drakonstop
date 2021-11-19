@@ -7,7 +7,7 @@ import Fab from "../components/Fab";
 import FormModal from "../components/FormModal.tsx";
 import Title from "../components/Title";
 import Tooltip from "../components/Tooltip";
-import { Add } from "../icons";
+import { Add, List } from "../icons";
 import Dragon from "../services/dragon";
 
 export default function Dragons() {
@@ -43,7 +43,7 @@ export default function Dragons() {
         onComplete={loadDragons}
       />
       <Title>
-        Dragon List{" "}
+        <List /> Dragon List{" "}
         <Tooltip text="Adicionar Dragão">
           <Fab onClick={handleOpen}>
             <Add />

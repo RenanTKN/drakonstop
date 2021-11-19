@@ -6,11 +6,11 @@ import DragonCard, { DragonProps } from "../../components/DragonCard";
 
 import "./style.scss";
 import FormModal from "../FormModal.tsx";
+import RemoveModal from "../RemoveModal";
 
 export default function DragonInfoContainer() {
-  const [currentDragon, setCurrentDragon] = React.useState<DragonProps | null>(
-    null
-  );
+  const [displayForm, setDisplayForm] = React.useState(false);
+  const [displayRemoveDragon, setDisplayRemoveDragon] = React.useState(false);
   const [dragon, setDragon] = React.useState<DragonProps>(Dragon.emptyDragon);
   const { id } = useParams<"id">();
 
@@ -24,23 +24,31 @@ export default function DragonInfoContainer() {
     loadDragon();
   }, [loadDragon]);
 
-  const editDragon = (dragon: DragonProps) => {
-    setCurrentDragon(dragon);
+  const onEdit = () => {
+    setDisplayForm(true);
   };
 
   return (
     <>
       <FormModal
-        display={!!currentDragon}
-        dragon={currentDragon}
-        onClose={() => setCurrentDragon(null)}
+        display={displayForm}
+        dragon={dragon}
+        onClose={() => setDisplayForm(false)}
         onComplete={loadDragon}
+      />
+      <RemoveModal
+        dragon={dragon}
+        display={displayRemoveDragon}
+        onClose={() => setDisplayRemoveDragon(false)}
       />
       <div className="dragoninfo-container">
         <DragonCard
           dragon={dragon}
-          showViewButton={false}
-          onEdit={editDragon}
+          isDragonInfo={true}
+          onEdit={onEdit}
+          onDelete={() => {
+            setDisplayRemoveDragon(true);
+          }}
         />
       </div>
     </>

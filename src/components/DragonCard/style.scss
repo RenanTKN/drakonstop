@@ -33,9 +33,13 @@
   .date {
     display: flex;
     align-items: center;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 15px;
+    font-size: 13px;
 
     svg {
       margin-right: 5px;
+      width: 15px;
     }
   }
 
@@ -49,4 +53,16 @@
       width: 80%;
     }
   }
+}
+
+.dragon-card-info {
+  min-width: 350px;
+  max-width: 750px;
+  margin: 0 15px;
+}
+
+.back {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
 }

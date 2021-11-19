@@ -4,7 +4,7 @@ import "./style.scss";
 
 interface FabProps {
   children: React.ReactNode;
-  color?: "blue" | "white" | "red";
+  color?: "blue" | "white" | "red" | "yellow";
   onClick?: () => void;
 }
 

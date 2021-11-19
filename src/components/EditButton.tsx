@@ -11,9 +11,9 @@ export default function EditButton({ dragon, onClick }: EditButtonProps) {
   const handleClick = () => {
     onClick?.(dragon);
   };
-  
+
   return (
-    <Fab onClick={handleClick}>
+    <Fab color="yellow" onClick={handleClick}>
       <Edit />
     </Fab>
   );

@@ -1,16 +1,15 @@
-import { memo } from "react";
+import React from "react";
 import { truncate } from "lodash";
-import { useParams } from "react-router";
-import { useNavigate } from "react-router-dom";
 
-import { Calendar } from "../../icons";
+import { Back, Calendar } from "../../icons";
+import DefaultIage from "../../assets/images/default.png";
+import ButtonLink from "../ButtonLink";
 import DeleteButton from "../DeleteButton";
 import EditButton from "../EditButton";
+import Fab from "../Fab";
+import Loading from "../Loading";
 import Tooltip from "../Tooltip";
 import ViewButton from "../ViewButton";
-import DefaultIage from "../../assets/images/default.png";
-
-import Dragon from "../../services/dragon";
 
 import "./style.scss";
 
@@ -23,79 +22,71 @@ export interface DragonProps {
 
 export interface DragonCardProps {
   dragon: DragonProps;
-  showViewButton?: boolean;
+  isDragonInfo?: boolean;
   onEdit?: (dragon: DragonProps) => void;
-  refreshDragons?: () => void;
+  onDelete?: (dragon: DragonProps) => void;
 }
 
 const DragonCard = ({
   dragon,
-  showViewButton = true,
+  isDragonInfo = false,
   onEdit,
-  refreshDragons,
+  onDelete,
 }: DragonCardProps) => {
   const { id, name, createdAt, type } = dragon;
-  const idParam = useParams<"id">().id;
   const datetime = new Date(createdAt).toLocaleString();
-  const navigate = useNavigate();
-
-  const onDelete = () => {
-    if (window.confirm(`Excluir Dragão #${id} ${name}?`)) {
-      Dragon.deleteDragon(id).then((res) => {
-        if (res.status !== 200) {
-          alert("Erro ao excluir.");
-        } else {
-          if (!!idParam) {
-            navigate("/");
-          } else {
-            refreshDragons?.();
-          }
-        }
-      });
-    }
-  };
 
   return (
-    <div className="dragon-card">
-      <div>
-        <div className="header">
-          <h1>
-            <Tooltip text={name}>{truncate(name, { length: 20 })}</Tooltip>
-          </h1>
-          <div className="action-buttons">
-            {showViewButton && (
-              <Tooltip text="Vizualizar">
-                <ViewButton id={id} />
-              </Tooltip>
-            )}
-            <Tooltip text="Editar">
-              <EditButton dragon={dragon} onClick={onEdit} />
-            </Tooltip>
-            <Tooltip text="Excluir">
-              <DeleteButton
-                onClick={() => {
-                  onDelete();
-                }}
-              />
-            </Tooltip>
+    <div className={`dragon-card ${isDragonInfo && "dragon-card-info"}`}>
+      {!!dragon.name ? (
+        <>
+          <div>
+            <div className="header">
+              <h1>
+                <Tooltip text={name}>{truncate(name, { length: 20 })}</Tooltip>
+              </h1>
+              <div className="action-buttons">
+                {!isDragonInfo ? (
+                  <Tooltip text="Vizualizar">
+                    <ViewButton id={id} />
+                  </Tooltip>
+                ) : (
+                  <ButtonLink to="/">
+                    <Tooltip text="voltar">
+                      <Fab>
+                        <Back />
+                      </Fab>
+                    </Tooltip>
+                  </ButtonLink>
+                )}
+                <Tooltip text="Editar">
+                  <EditButton dragon={dragon} onClick={onEdit} />
+                </Tooltip>
+                <Tooltip text="Excluir">
+                  <DeleteButton dragon={dragon} onClick={onDelete} />
+                </Tooltip>
+              </div>
+            </div>
+            <div className="date">
+              <Calendar />
+              {datetime}
+            </div>
           </div>
-        </div>
-        <div className="date">
-          <Calendar />
-          {datetime}
-        </div>
-      </div>
-      <div className="image">
-        <img
-          src={type}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = DefaultIage;
-          }}
-          alt={name}
-        />
-      </div>
+          <div className="image">
+            <img
+              src={type}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = DefaultIage;
+              }}
+              alt={name}
+            />
+          </div>
+        </>
+      ) : (
+        <Loading center />
+      )}
     </div>
   );
 };
 
-export default memo(DragonCard);
+export default React.memo(DragonCard);

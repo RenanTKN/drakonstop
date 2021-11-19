@@ -1,5 +1,4 @@
 .button {
-  background-color: rgb(25, 118, 210);
   color: #fff;
   border: none;
   padding: 10px 15px;
@@ -7,4 +6,21 @@
   width: 100%;
   border-radius: 5px;
   cursor: pointer;
+
+  &:disabled {
+    background-color: rgb(164, 175, 185);
+    cursor: not-allowed;
+  }
+}
+
+.blue {
+  background-color: rgb(25, 118, 210);
+}
+
+.red {
+  background-color: #dc3545;
+}
+
+.gray {
+  background-color: #6c757d;
 }
