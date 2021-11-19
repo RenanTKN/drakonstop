@@ -3,12 +3,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import { Add, Edit } from "../../icons";
+import Dragon from "../../services/dragon";
 import Button from "../Button";
 import { DragonProps } from "../DragonCard";
 import Modal from "../Modal";
 import Title from "../Title";
-
-import Dragon from "../../services/dragon";
 
 import "./style.scss";
 

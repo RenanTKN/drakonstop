@@ -1,13 +1,13 @@
 import React from "react";
+import { useNavigate, useParams } from "react-router";
+
 import { Trash } from "../../icons";
+import Dragon from "../../services/dragon";
 import Button from "../Button";
 import { DragonProps } from "../DragonCard";
-import Dragon from "../../services/dragon";
-
 import Modal from "../Modal";
 
 import "./style.scss";
-import { useNavigate, useParams } from "react-router";
 
 interface RemoveModalProps {
   dragon: DragonProps;

@@ -1,12 +1,12 @@
 import React from "react";
 import { useParams } from "react-router";
 
-import Dragon from "../../services/dragon";
 import DragonCard, { DragonProps } from "../../components/DragonCard";
-
-import "./style.scss";
+import Dragon from "../../services/dragon";
 import FormModal from "../FormModal.tsx";
 import RemoveModal from "../RemoveModal";
+
+import "./style.scss";
 
 export default function DragonInfoContainer() {
   const [displayForm, setDisplayForm] = React.useState(false);
